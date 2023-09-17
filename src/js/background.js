@@ -1,5 +1,26 @@
 const isFirefox = /Firefox/i.test(navigator.userAgent);
 
+// Check if the browser is Firefox
+if (isFirefox) {
+  browser.runtime.onInstalled.addListener((details) => {
+    if (details.reason === "install") {
+      browser.storage.local.get('consentStatus').then(function (data) {
+        const consentStatus = data.consentStatus;
+        if (consentStatus !== 'granted') {
+          browser.tabs.create({
+            url: "html/consent.html"
+          });
+        } else {
+          executeBackgroundScript();
+        }
+      });
+    }
+  });
+} else {
+  // For non-Firefox browsers, execute background script
+  executeBackgroundScript();
+}
+
 function executeBackgroundScript() {
   const brws = typeof browser !== 'undefined' ? browser : chrome;
   const fetchDomains = ['crowd.fastforward.team', 'redirect-api.work.ink']; //only allow requests to these domains
@@ -169,25 +190,4 @@ function executeBackgroundScript() {
       }
     });
   });
-}
-
-// Check if the browser is Firefox
-if (isFirefox) {
-  browser.runtime.onInstalled.addListener((details) => {
-    if (details.reason === "install") {
-      browser.storage.local.get('consentStatus').then(function (data) {
-        const consentStatus = data.consentStatus;
-        if (consentStatus !== 'granted') {
-          browser.tabs.create({
-            url: "html/consent.html"
-          });
-        } else {
-          executeBackgroundScript();
-        }
-      });
-    }
-  });
-} else {
-  // For non-Firefox browsers, execute background script
-  executeBackgroundScript();
 }
