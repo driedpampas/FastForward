@@ -2,14 +2,14 @@
 async function saveConsentStatus(consentStatus) {
     return browser.storage.local.set({ consentStatus: consentStatus });
 }
-  
+
 // Function to get consent status
 async function getConsentStatus() {
-return new Promise((resolve) => {
-    browser.storage.local.get('consentStatus').then((result) => {
-    resolve(result.consentStatus);
+    return new Promise((resolve) => {
+        browser.storage.local.get('consentStatus').then((result) => {
+            resolve(result.consentStatus);
+        });
     });
-});
 }
 
 const isFirefox = /Firefox/i.test(navigator.userAgent);
@@ -22,15 +22,15 @@ if (isFirefox) {
                 const consentStatus = data.consentStatus;
                 console.log("Consent status:", consentStatus);
 
-                if (consentStatus !== 'granted') {
+                if (consentStatus !== 'consent-granted') {
                     console.log("Consent not granted.");
-                    
+
                     // Event listener for "Agree" button
                     document.querySelector('#agree').addEventListener('click', async function () {
                         console.log("Agree button clicked.");
                         let options = await getOptions();
-                        options['accept'] = true;
-                        saveOptions(options);
+                        options['consent-granted'] = true;
+                        saveConsentStatus(consentStatus);
                         window.location.href = 'options.html';
                     });
 
@@ -38,8 +38,8 @@ if (isFirefox) {
                     document.querySelector('#refuse').addEventListener('click', async function () {
                         console.log("Refuse button clicked.");
                         let options = await getOptions();
-                        options['accept'] = false;
-                        saveOptions(options);
+                        options['consent-granted'] = false;
+                        saveConsentStatus(consentStatus);
                         console.log("Uninstalling extension.");
                         browser.management.uninstallSelf();
                     });
