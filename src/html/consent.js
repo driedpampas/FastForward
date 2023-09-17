@@ -24,37 +24,24 @@ if (isFirefox) {
 
                 if (consentStatus !== 'granted') {
                     console.log("Consent not granted.");
-                    document.getElementById("consentButton").addEventListener("click", function () {
-                        console.log("Consent granted.");
-                        browser.storage.local.set({ 'consentStatus': 'granted' }).then(function () {
-                            window.location.href = 'options.html';
-                        });
+                    
+                    // Event listener for "Agree" button
+                    document.querySelector('#agree').addEventListener('click', async function () {
+                        console.log("Agree button clicked.");
+                        let options = await getOptions();
+                        options['accept'] = true;
+                        saveOptions(options);
+                        window.location.href = 'options.html';
                     });
 
-                    document.getElementById("declineButton").addEventListener("click", function () {
-                        console.log("Consent declined.");
-                        browser.storage.local.set({ 'consentStatus': 'declined' }).then(function () {
-                            const popup = document.getElementById("popup");
-                            popup.style.display = "block";
-
-                            let countdownValue = 5;
-                            const countdownElement = document.getElementById("countdown");
-                            const countdownInterval = setInterval(function () {
-                                countdownValue -= 1;
-                                countdownElement.textContent = countdownValue;
-
-                                if (countdownValue === 0) {
-                                    console.log("Uninstalling extension.");
-                                    browser.management.uninstallSelf();
-                                }
-                            }, 1000);
-
-                            document.getElementById("cancelButton").addEventListener("click", function () {
-                                console.log("Consent declined and canceled.");
-                                popup.style.display = "none";
-                                clearInterval(countdownInterval);
-                            });
-                        });
+                    // Event listener for "Refuse" button
+                    document.querySelector('#refuse').addEventListener('click', async function () {
+                        console.log("Refuse button clicked.");
+                        let options = await getOptions();
+                        options['accept'] = false;
+                        saveOptions(options);
+                        console.log("Uninstalling extension.");
+                        browser.management.uninstallSelf();
                     });
                 }
             });
