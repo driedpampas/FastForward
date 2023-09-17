@@ -28,8 +28,8 @@ if (isFirefox) {
                     // Event listener for "Agree" button
                     document.querySelector('#agree').addEventListener('click', async function () {
                         console.log("Agree button clicked.");
-                        let options = await getOptions();
-                        options['consent-granted'] = true;
+                        let options = await getConsentStatus();
+                        consent['consent-granted'] = true;
                         saveConsentStatus(consentStatus);
                         window.location.href = 'options.html';
                     });
@@ -37,8 +37,8 @@ if (isFirefox) {
                     // Event listener for "Refuse" button
                     document.querySelector('#refuse').addEventListener('click', async function () {
                         console.log("Refuse button clicked.");
-                        let options = await getOptions();
-                        options['consent-granted'] = false;
+                        let consent = await getConsentStatus();
+                        consent['consent-granted'] = false;
                         saveConsentStatus(consentStatus);
                         console.log("Uninstalling extension.");
                         browser.management.uninstallSelf();
