@@ -12,35 +12,33 @@ async function getConsentStatus() {
     });
 }
 
-browser.runtime.onInstalled.addListener((details) => {
+browser.runtime.onInstalled.addListener(async (details) => {
     if (details.reason === "install") {
         console.log("Extension installed.");
-        browser.storage.local.get('consentStatus').then(function (data) {
-            const consentStatus = data.consentStatus;
-            console.log("Consent status:", consentStatus);
+        const consentStatus = await getConsentStatus();
+        console.log("Consent status:", consentStatus);
 
-            if (consentStatus !== 'consent-granted') {
-                console.log("Consent not granted.");
+        if (consentStatus !== 'consent-granted') {
+            console.log("Consent not granted.");
 
-                // Event listener for "Agree" button
-                document.querySelector('#agree').addEventListener('click', async function () {
+            // Event listener for "Agree" button
+            document
+                .querySelector('#agree')
+                .addEventListener('click', async function () {
                     console.log("Agree button clicked.");
-                    let options = await getConsentStatus();
-                    consent['consent-granted'] = true;
-                    saveConsentStatus(consentStatus);
+                    await saveConsentStatus('consent-granted');
                     window.location.href = 'options.html';
                 });
 
-                // Event listener for "Refuse" button
-                document.querySelector('#refuse').addEventListener('click', async function () {
+            // Event listener for "Refuse" button
+            document
+                .querySelector('#refuse')
+                .addEventListener('click', async function () {
                     console.log("Refuse button clicked.");
-                    let consent = await getConsentStatus();
-                    consent['consent-granted'] = false;
-                    saveConsentStatus(consentStatus);
+                    await saveConsentStatus('consent-refused');
                     console.log("Uninstalling extension.");
                     browser.management.uninstallSelf();
                 });
-            }
-        });
+        }
     }
 });
