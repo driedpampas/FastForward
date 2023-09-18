@@ -2,41 +2,43 @@
 async function saveConsentStatus(consentStatus) {
     return browser.storage.local.set({ consentStatus: consentStatus });
 }
-  
+
 // Function to get consent status
 async function getConsentStatus() {
-return new Promise((resolve) => {
-    browser.storage.local.get('consentStatus').then((result) => {
-    resolve(result.consentStatus);
+    return new Promise((resolve) => {
+        browser.storage.local.get('consentStatus').then((result) => {
+            resolve(result.consentStatus);
+        });
     });
-});
 }
 
-const isFirefox = /Firefox/i.test(navigator.userAgent);
+browser.runtime.onInstalled.addListener(async (details) => {
+    if (details.reason === "install") {
+        console.log("Extension installed.");
+        const consentStatus = await getConsentStatus();
+        console.log("Consent status:", consentStatus);
 
-document.addEventListener("DOMContentLoaded", function () {
-    if (isFirefox) {
-        browser.runtime.onInstalled.addListener(async (details) => {
-            if (details.reason === "install") {
-                const consentStatus = await getConsentStatus();
-    
-                if (consentStatus !== 'granted') {
-                    const consentButton = document.getElementById("consentButton");
-                    consentButton.addEventListener("click", async function () {
-                        await saveConsentStatus('granted');
-                        window.location.href = 'options.html';
-                    });
-    
-                    const declineButton = document.getElementById("declineButton");
-                    declineButton.addEventListener("click", async function () {
-                        await saveConsentStatus('declined');
-                        browser.management.uninstallSelf();
-                    });
-                }
-            }
-        });
-    } else {
-        // Not Firefox, load options.html directly
-        window.location.href = 'options.html';
-    }    
+        if (consentStatus !== 'consent-granted') {
+            console.log("Consent not granted.");
+
+            // Event listener for "Agree" button
+            document
+                .querySelector('#agree')
+                .addEventListener('click', async function () {
+                    console.log("Agree button clicked.");
+                    await saveConsentStatus('consent-granted');
+                    window.location.href = 'options.html';
+                });
+
+            // Event listener for "Refuse" button
+            document
+                .querySelector('#refuse')
+                .addEventListener('click', async function () {
+                    console.log("Refuse button clicked.");
+                    await saveConsentStatus('consent-refused');
+                    console.log("Uninstalling extension.");
+                    browser.management.uninstallSelf();
+                });
+        }
+    }
 });

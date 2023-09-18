@@ -19,7 +19,7 @@ if (isFirefox) {
     if (details.reason === "install") {
       browser.storage.local.get('consentStatus').then(function (data) {
         const consentStatus = data.consentStatus;
-        if (consentStatus !== 'granted') {
+        if (consentStatus !== 'consent-granted') {
           browser.tabs.create({
             url: "html/consent.html"
           });
