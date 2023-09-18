@@ -34,8 +34,6 @@ browser.runtime.onInstalled.addListener(async (details) => {
             document
                 .querySelector('#refuse')
                 .addEventListener('click', async function () {
-                    console.log("Refuse button clicked.");
-                    await saveConsentStatus('consent-refused');
                     console.log("Uninstalling extension.");
                     browser.management.uninstallSelf();
                 });
