@@ -1,3 +1,5 @@
+import * as constants from './constants.js';
+
 const isFirefox = /Firefox/i.test(navigator.userAgent);
 
 // Check if the browser is Firefox
