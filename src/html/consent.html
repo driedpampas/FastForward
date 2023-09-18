@@ -21,8 +21,16 @@
             font-size: 28px;
             line-height: 1.5;
         }
-        button {
-            background: linear-gradient(90deg, rgba(0,186,248,1) 0%, rgba(98,33,209,1) 100%); 
+        buttons {
+            border: 2px solid;
+            border-image: linear-gradient(
+                135deg,
+                var(--ff-aqua) 0%,
+                var(--ff-blue) 50%,
+                var(--ff-purple) 100%
+            )
+            1;
+            background-color: transparent;
             border: none;
             padding: 10px 20px;
             font-size: 18px;
@@ -47,8 +55,8 @@
         <p>
             If you consent to this data collection hit "Agree". Otherwise hit "Refuse"
         </p>
-        <button id="agree" class="button" value="Agree">
-        <button id="refuse" class="button" value="Refuse">
+        <button id="agree" class="buttons" value="Agree">
+        <button id="refuse" class="buttons" value="Refuse">
         
     </div>
 
