@@ -12,6 +12,19 @@ async function getConsentStatus() {
     });
 }
 
+// Event listener for "Agree" button
+document.querySelector('#agree').addEventListener('click', async function () {
+    console.log("Agree button clicked.");
+    await saveConsentStatus('consent-granted');
+    window.location.href = 'options.html';
+});
+
+// Event listener for "Refuse" button
+document.querySelector('#refuse').addEventListener('click', async function () {
+    console.log("Uninstalling extension.");
+    browser.management.uninstallSelf();
+});
+
 browser.runtime.onInstalled.addListener(async (details) => {
     if (details.reason === "install") {
         console.log("Extension installed.");
@@ -20,23 +33,6 @@ browser.runtime.onInstalled.addListener(async (details) => {
 
         if (consentStatus !== 'consent-granted') {
             console.log("Consent not granted.");
-
-            // Event listener for "Agree" button
-            document
-                .querySelector('#agree')
-                .addEventListener('click', async function () {
-                    console.log("Agree button clicked.");
-                    await saveConsentStatus('consent-granted');
-                    window.location.href = 'options.html';
-                });
-
-            // Event listener for "Refuse" button
-            document
-                .querySelector('#refuse')
-                .addEventListener('click', async function () {
-                    console.log("Uninstalling extension.");
-                    browser.management.uninstallSelf();
-                });
         }
     }
 });
