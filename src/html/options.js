@@ -14,19 +14,6 @@ let defaultOptions = {
   whitelist: '',
 };
 
-browser.runtime.onInstalled.addListener((details) => {
-  if (details.reason === "install") {
-    browser.storage.local.get('consentStatus').then(function (data) {
-      const consentStatus = data.consentStatus;
-      if (consentStatus !== 'consent-granted') {
-        browser.tabs.create({
-          url: "html/consent.html"
-        });
-      }
-    });
-  }
-});
-
 const crowdTempDisabledMessage = document.querySelector(
   '#crowdTempDisabledMessage'
 );
