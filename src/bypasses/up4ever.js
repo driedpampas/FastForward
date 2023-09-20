@@ -24,7 +24,6 @@ export default class Up4ever extends BypassDefinition {
         if (downloadButton) {
             downloadButton.click();
         } else {
-            console.error("Download button not found.");
             return; // Exit if the button is not found
         }
 
@@ -35,6 +34,8 @@ export default class Up4ever extends BypassDefinition {
             if (dataTarget) {
                 window.location.href = dataTarget;
             }
+        } else {
+            return; // Exit if the button is not found
         }
     }
 
