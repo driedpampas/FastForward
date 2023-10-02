@@ -88,14 +88,76 @@ function addEventListeners() {
       });
     });
 
-  document
-    .querySelector('#whitelist')
-    .addEventListener('input', async function () {
-      let options = await getOptions();
-      options['whitelist'] = this.value;
+  document.querySelector('#whitelist').addEventListener('input', async function () {
+    let options = await getOptions();
+    options['whitelist'] = this.value;
+    saveOptions(options);
+    checkTextareaValidity();
+  });
+
+  document.querySelector('#add-button').addEventListener('click', async function () {
+    let options = await getOptions();
+    let whitelist = options['whitelist'];
+    let newLink = document.querySelector('#whitelist').value.trim();
+    if (isValidLink(newLink)) {
+      whitelist += '\n' + newLink;
+      options['whitelist'] = whitelist;
       saveOptions(options);
-      checkTextareaValidity();
-    });
+      updateWhitelist();
+    } else {
+      alert('Invalid link');
+    }
+  });
+
+  document.querySelector('#delete-button').addEventListener('click', async function () {
+    let options = await getOptions();
+    let whitelist = options['whitelist'];
+    let links = whitelist.split('\n');
+    let checkedLinks = [];
+    let newWhitelist = '';
+    for (let i = 0; i < links.length; i++) {
+      let checkbox = document.querySelector(`#checkbox-${i}`);
+      if (checkbox && checkbox.checked) {
+        checkedLinks.push(links[i]);
+      } else {
+        newWhitelist += links[i] + '\n';
+      }
+    }
+    if (checkedLinks.length > 0) {
+      options['whitelist'] = newWhitelist.trim();
+      saveOptions(options);
+      updateWhitelist();
+    }
+  });
+
+  async function updateWhitelist() {
+    let options = await getOptions();
+    let whitelist = options['whitelist'];
+    let links = whitelist.split('\n');
+    let list = document.querySelector('#whitelist-list');
+    list.innerHTML = '';
+    for (let i = 0; i < links.length; i++) {
+      let link = links[i].trim();
+      if (link) {
+        let item = document.createElement('li');
+        let checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = `checkbox-${i}`;
+        item.appendChild(checkbox);
+        let label = document.createElement('label');
+        label.htmlFor = `checkbox-${i}`;
+        label.textContent = link;
+        item.appendChild(label);
+        list.appendChild(item);
+      }
+    }
+  }
+
+  function isValidLink(link) {
+    // Replace this with your own validation logic
+    let regex = /^https?:\/\/(www\.)?[a-z0-9]+\.[a-z]+(\/.*)?$/i;
+    return regex.test(link);
+  }
 
   document
     .querySelectorAll('#options-form input[type="number"]')

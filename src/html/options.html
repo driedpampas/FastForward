@@ -95,7 +95,12 @@
         <section>
           <h2 data-message="optionsWhitelist"></h2>
           <p data-message="optionsWhitelistDescription"></p>
-          <textarea id="whitelist" class="ffInput" spellcheck="false"></textarea>
+          <div>
+            <textarea id="whitelist" class="ffInput" spellcheck="false"></textarea>
+            <button id="add-button" type="button">Add</button>
+            <button id="delete-button" type="button">Delete</button>
+          </div>
+          <ul id="whitelist-list"></ul>
         </section>
       </form>      
       <p class="version"><span data-message="version"></span> <span id="version"></span></p>
