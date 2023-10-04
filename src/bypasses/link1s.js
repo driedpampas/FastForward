@@ -11,7 +11,12 @@ export default class Link1s extends BypassDefinition {
         this.helpers.awaitElement("#link1s", a => {
             a.click();
         });
+
+        const btn6 = document.querySelector("#btn6");
+            if (btn6) {
+                btn6.click();
+        }
     }
 }
 
-export const matches = ['anhdep24.com', 'hocbeauty.com']
+export const matches = ['https://anhdep24.com', 'https://hocbeauty.com']
