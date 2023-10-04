@@ -6,7 +6,7 @@ export default class Link1s extends BypassDefinition {
         // custom bypass required bases can be set here
     }
 
-    execute() {
+    execute() {  
         window.setInterval = f => setTimeout(f,1)
         this.helpers.awaitElement("#link1s", a => {
             a.click();
@@ -14,4 +14,4 @@ export default class Link1s extends BypassDefinition {
     }
 }
 
-export const matches = ['anhdep24.com']
+export const matches = ['anhdep24.com', 'hocbeauty.com']
