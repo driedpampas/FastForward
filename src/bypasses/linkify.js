@@ -10,6 +10,18 @@ export default class Linkify extends BypassDefinition {
         allowPush()
         const href = document.getElementById('mainbutton').href;
         this.helpers.safelyNavigate(href);
+        
+        const scripts = document.getElementsByTagName('script');
+        const lastScript = scripts[scripts.length - 1];
+        const scriptContent = lastScript.innerHTML;
+
+        const linkPattern = /https?:\/\/[^\s"]+/;
+        const match = scriptContent.match(linkPattern);
+
+        if (match) {
+        const link = match[0];
+        this.helpers.safelyNavigate(link);
+        }
     }
 
 }
