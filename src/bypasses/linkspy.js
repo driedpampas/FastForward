@@ -7,7 +7,7 @@ export default class Linkspy extends BypassDefinition {
     }
 
     execute() {
-        const url = document.getElementsByClassName("skipButton")[0].getAttribute("href")
+        const url = document.querySelector("a.skipButton").getAttribute("href")
         this.helpers.safelyNavigate(url)
     }
 }
